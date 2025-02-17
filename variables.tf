@@ -20,7 +20,7 @@ variable "vpc_cidr_block" {
 variable "availability_zones" {
   description = "List of availability zones"
   type        = list(string)
-  default     = ["us-east-1a", "us-east-1b", "us-east-1c"] 
+  default     = ["us-east-1a", "us-east-1b", "us-east-1c"]
 }
 
 # Subnet CIDR Blocks for public and private subnets
@@ -40,7 +40,7 @@ variable "subnets" {
 # Tags to apply to resources
 variable "tags" {
   description = "Default tags for resources"
-  type = map(string)
+  type        = map(string)
   default = {
     Environment = "Demo"
     Project     = "My Webapp terraform"
