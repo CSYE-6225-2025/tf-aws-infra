@@ -5,7 +5,7 @@ variable "aws_region" {
 
 variable "vpc_name" {
   description = "The name of the vpc"
-  type = string
+  type        = string
 }
 
 variable "vpc_cidr" {
@@ -15,12 +15,12 @@ variable "vpc_cidr" {
 
 variable "aws_profile" {
   description = "AWS Profile"
-  type = string
+  type        = string
 }
 
 variable "environment" {
   description = "Environment name"
-  type = string
+  type        = string
 }
 
 variable "public_subnets_cidr" {

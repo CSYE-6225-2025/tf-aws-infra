@@ -1,14 +1,14 @@
 provider "aws" {
-  region = var.aws_region
+  region  = var.aws_region
   profile = var.aws_profile
 }
 
 resource "aws_vpc" "main" {
-  cidr_block           = var.vpc_cidr
-  enable_dns_support   = true
+  cidr_block         = var.vpc_cidr
+  enable_dns_support = true
 
   tags = {
-    Name= "${var.vpc_name}"
+    Name = "${var.vpc_name}"
   }
 }
 
@@ -76,7 +76,7 @@ resource "aws_route_table" "private" {
 }
 
 resource "aws_route_table_association" "private" {
-  count =  length(aws_subnet.private)
+  count = length(aws_subnet.private)
 
   subnet_id      = aws_subnet.private[count.index].id
   route_table_id = aws_route_table.private.id
