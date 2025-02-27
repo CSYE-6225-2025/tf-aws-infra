@@ -39,3 +39,12 @@ variable "private_subnets_az" {
   type = list(string)
 }
 
+variable "custom_ami" {
+  description = "AMI string name"
+  type        = string
+}
+
+variable "app_port" {
+  description = "Application running port"
+  type        = string
+}
