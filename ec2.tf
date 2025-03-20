@@ -68,12 +68,34 @@ resource "aws_instance" "webapp_ec2_instance" {
   tags = {
     Name = "My webapp_ec2_Instance {{timestamp}}"
   }
+
   user_data = <<-EOF
-                #!/bin/bash
-                cd /opt/csye6225/webapp
-                npm install
-                node server.js
-                EOF
+              #!/bin/bash
+
+              # Ensure webapp directory exists
+              mkdir -p /opt/csye6225/webapp
+              cd /opt/csye6225/webapp
+
+              # Ensure .env file exists before modifying
+              touch .env
+
+              # Update environment variables in .env file
+              cat <<EOT > .env
+              MYSQL_USER=${aws_db_instance.csye6225_db.username}
+              MYSQL_PASSWORD=${aws_db_instance.csye6225_db.password}
+              MYSQL_HOST=$(echo ${aws_db_instance.csye6225_db.endpoint} | cut -d ':' -f 1)
+              MYSQL_DB=${aws_db_instance.csye6225_db.db_name}
+              MYSQL_PORT=3306
+              PORT=8080
+              AWS_ACCESS_KEY_ID=${var.aws_access}
+              AWS_SECRET_ACCESS_KEY=${var.aws_secret_access}
+              AWS_REGION=${var.aws_region}
+              AWS_BUCKET_NAME=${aws_s3_bucket.this.id}
+              EOT
+
+              # Set correct permissions for security
+              chmod 600 .env
+              EOF
 }
 
 output "ec2_instance_public_ip" {
