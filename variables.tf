@@ -3,14 +3,14 @@ variable "aws_region" {
   type        = string
 }
 
-variable "aws_secret_access" {
-  description = "AWS secret key"
-  type        = string
-}
-variable "aws_access" {
-  description = "AWS access key"
-  type        = string
-}
+# variable "aws_secret_access" {
+#   description = "AWS secret key"
+#   type        = string
+# }
+# variable "aws_access" {
+#   description = "AWS access key"
+#   type        = string
+# }
 
 
 variable "vpc_name" {
