@@ -71,7 +71,18 @@ resource "aws_iam_role_policy" "cloudwatch_logs_access_policy" {
           "logs:PutLogEvents",
           "logs:DescribeLogStreams"
         ]
-        Resource = "arn:aws:logs:*:*:log-group:/var/log/webapp:*"
+        Resource = ["arn:aws:logs:*:*:log-group:/var/log/webapp:*",
+          "arn:aws:logs:*:*:log-group:/var/log/webapp:*"
+        ]
+      }, # Metrics permissions
+      {
+        Effect = "Allow"
+        Action = [
+          "cloudwatch:PutMetricData",
+          "cloudwatch:GetMetricStatistics",
+          "cloudwatch:ListMetrics"
+        ]
+        Resource = "*"
       }
     ]
   })
