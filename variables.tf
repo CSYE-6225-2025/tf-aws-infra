@@ -2,17 +2,20 @@ variable "aws_region" {
   description = "AWS region"
   type        = string
 }
+variable "domain_name" {
+  description = "Your domain name"
+  type        = string
+}
 
-# variable "aws_secret_access" {
-#   description = "AWS secret key"
-#   type        = string
-# }
-# variable "aws_access" {
-#   description = "AWS access key"
-#   type        = string
-# }
+variable "root_zone_id" {
+  description = "Your root zone id"
+  type        = string
+}
 
-
+variable "subdomain_zone_id" {
+  description = "Hosted Zone ID for the subdomain"
+  type        = string
+}
 variable "vpc_name" {
   description = "The name of the vpc"
   type        = string
