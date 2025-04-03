@@ -107,3 +107,106 @@ variable "db_parameter_group_family" {
   type        = string
   default     = "mysql5.7" # Adjust for PostgreSQL or MariaDB if needed
 }
+
+
+variable "asg_desired_capacity" {
+  default     = 5
+  type        = number
+  description = "Desired capacity for the auto scaling group"
+}
+
+variable "asg_min_size" {
+  default     = 3
+  type        = number
+  description = "Minimum size for the auto scaling group"
+}
+
+variable "asg_max_size" {
+  default     = 10
+  type        = number
+  description = "Maximum size for the auto scaling group"
+}
+
+variable "scale_up_evaluation_periods" {
+  default     = 1
+  type        = number
+  description = "Number of evaluation periods for scale up"
+}
+
+variable "scale_up_period" {
+  default     = 10
+  type        = number
+  description = "Period in seconds for scale up metrics"
+}
+
+variable "scale_up_threshold" {
+  default     = 13
+  type        = number
+  description = "CPU threshold for scale up"
+}
+
+variable "scale_down_evaluation_periods" {
+  default     = 1
+  type        = number
+  description = "Number of evaluation periods for scale down"
+}
+
+variable "scale_down_period" {
+  default     = 10
+  type        = number
+  description = "Period in seconds for scale down metrics"
+}
+
+variable "scale_down_threshold" {
+  default     = 10
+  type        = number
+  description = "CPU threshold for scale down"
+}
+
+variable "cooldown" {
+  default     = 60
+  type        = number
+  description = "Cooldown period in seconds"
+}
+
+variable "scale_up_adjustment" {
+  default     = 1
+  type        = number
+  description = "Adjustment value for scale up"
+}
+
+variable "scale_down_adjustment" {
+  default     = -1
+  type        = number
+  description = "Adjustment value for scale down"
+}
+
+variable "health_check_grace_period" {
+  default     = 300
+  type        = number
+  description = "Health check grace period in seconds"
+}
+
+variable "health_check_interval" {
+  default     = 10
+  type        = number
+  description = "Health check interval in seconds"
+}
+
+variable "health_check_timeout" {
+  default     = 5
+  type        = number
+  description = "Health check timeout in seconds"
+}
+
+variable "healthy_threshold" {
+  default     = 2
+  type        = number
+  description = "Number of consecutive successful health checks"
+}
+
+variable "unhealthy_threshold" {
+  default     = 2
+  type        = number
+  description = "Number of consecutive failed health checks"
+}
