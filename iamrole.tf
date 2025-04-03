@@ -127,3 +127,30 @@ resource "aws_iam_instance_profile" "ec2_profile" {
   name = "EC2-CloudWatch-Profile-${var.vpc_name}"
   role = aws_iam_role.ec2_cloudwatch_role.name
 }
+
+# Route 53 Full Access Policy
+resource "aws_iam_role_policy" "route53_access_policy" {
+  name = "Route53AccessPolicy"
+  role = aws_iam_role.ec2_cloudwatch_role.id
+
+  policy = jsonencode({
+    Version = "2012-10-17",
+    Statement = [
+      {
+        Effect = "Allow",
+        Action = [
+          "route53:ListHostedZones",
+          "route53:GetHostedZone",
+          "route53:ChangeResourceRecordSets",
+          "route53:ListResourceRecordSets",
+          "route53:CreateHostedZone",
+          "route53:DeleteHostedZone",
+          "route53:GetChange",
+          "route53:ListTagsForResource",
+          "route53:ChangeTagsForResource"
+        ],
+        Resource = "*"
+      }
+    ]
+  })
+}
