@@ -1,7 +1,7 @@
 # Data source to get the latest Ubuntu AMI
 data "aws_ami" "default_vpc_ami" {
   most_recent = true
-  owners      = ["099720109477"] 
+  owners      = ["099720109477"]
 
   filter {
     name   = "name"
@@ -18,14 +18,14 @@ resource "aws_security_group" "app_security_group" {
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"] 
+    cidr_blocks = ["0.0.0.0/0"]
   }
 
   ingress {
     from_port       = var.app_port
     to_port         = var.app_port
     protocol        = "tcp"
-    security_groups = [aws_security_group.load_balancer_sg.id] 
+    security_groups = [aws_security_group.load_balancer_sg.id]
   }
 
   egress {
@@ -56,7 +56,7 @@ resource "aws_launch_template" "webapp" {
     name = aws_iam_instance_profile.ec2_profile.name
   }
 
-   user_data = base64encode(<<-EOF
+  user_data = base64encode(<<-EOF
               #!/bin/bash
 
               # Ensure webapp directory exists
@@ -98,7 +98,7 @@ resource "aws_launch_template" "webapp" {
                   exit 1
               fi
               EOF
-   )
+  )
 
   metadata_options {
     http_endpoint = "enabled"

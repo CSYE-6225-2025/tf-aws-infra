@@ -9,7 +9,7 @@ variable "domain_name" {
 
 variable "root_zone_id" {
   description = "Your root zone id"
-  type = string
+  type        = string
 }
 
 variable "subdomain_zone_id" {

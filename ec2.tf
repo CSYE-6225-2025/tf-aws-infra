@@ -133,7 +133,7 @@
 
 #               # Set correct permissions for security
 #               chmod 600 .env
-              
+
 #               # Ensure logs directory exists
 #               mkdir -p /opt/csye6225/webapp/logs
 #               chown csye6225:csye6225 /opt/csye6225/webapp/logs
