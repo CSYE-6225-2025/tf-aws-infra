@@ -61,18 +61,21 @@ resource "aws_db_instance" "csye6225_db" {
   instance_class         = "db.t3.micro"
   allocated_storage      = 20
   username               = var.db_username
-  password               = var.db_password
+  password               = random_password.db_password.result
   db_name                = var.db_name
   parameter_group_name   = aws_db_parameter_group.csye6225_db_pg.name
   vpc_security_group_ids = [aws_security_group.db_security_group.id]
   db_subnet_group_name   = aws_db_subnet_group.csye6225_db_subnet_group.name
   publicly_accessible    = false
   skip_final_snapshot    = true
+  storage_encrypted      = true
+  kms_key_id             = aws_kms_key.rds_key.arn
 
   # Ensure the RDS instance is deleted before the parameter group and subnet group
   depends_on = [
     aws_db_parameter_group.csye6225_db_pg,
-    aws_db_subnet_group.csye6225_db_subnet_group
+    aws_db_subnet_group.csye6225_db_subnet_group,
+    aws_secretsmanager_secret_version.db_master_password_version
   ]
 }
 

@@ -63,13 +63,18 @@ resource "aws_launch_template" "webapp" {
               mkdir -p /opt/csye6225/webapp
               cd /opt/csye6225/webapp
 
+              #Database credentials and endpoint
+              
+              REGION="${var.aws_region}"
+              SECRET_NAME="${aws_secretsmanager_secret.db_master_password_secret.name}"
+              
               # Ensure .env file exists before modifying
               touch .env
 
               # Update environment variables in .env file
               cat <<EOT > .env
               MYSQL_USER=${aws_db_instance.csye6225_db.username}
-              MYSQL_PASSWORD=${aws_db_instance.csye6225_db.password}
+              MYSQL_PASSWORD=$(aws secretsmanager get-secret-value --region $REGION --secret-id $SECRET_NAME --query SecretString --output text | jq -r '.password')           
               MYSQL_HOST=$(echo ${aws_db_instance.csye6225_db.endpoint} | cut -d ':' -f 1)
               MYSQL_DB=${aws_db_instance.csye6225_db.db_name}
               MYSQL_PORT=3306
@@ -80,12 +85,16 @@ resource "aws_launch_template" "webapp" {
 
               # Set correct permissions for security
               chmod 600 .env
-              
+              chown csye6225:csye6225 .env
+
               # Ensure logs directory exists
               mkdir -p /opt/csye6225/webapp/logs
               chown csye6225:csye6225 /opt/csye6225/webapp/logs
               chmod 755 /opt/csye6225/webapp/logs
 
+              # Start csye6225.service
+              sudo systemctl restart  csye6225.service
+              
               # Start CloudWatch Agent
               systemctl start amazon-cloudwatch-agent.service
 
@@ -111,6 +120,8 @@ resource "aws_launch_template" "webapp" {
       volume_size           = 25
       volume_type           = "gp2"
       delete_on_termination = true
+      encrypted             = true
+      kms_key_id            = aws_kms_key.ec2_key.arn
     }
   }
 

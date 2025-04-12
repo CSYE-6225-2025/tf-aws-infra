@@ -60,19 +60,24 @@ resource "aws_lb_target_group" "webapp_tg" {
   }
 }
 
-# Listener
+data "aws_acm_certificate" "cert" {
+  domain      = "${var.environment}.hardishah.me"
+  statuses    = ["ISSUED"]
+  most_recent = true
+}
+
 resource "aws_lb_listener" "webapp_listener" {
   load_balancer_arn = aws_lb.webapp_alb.arn
-  port              = 80
-  protocol          = "HTTP"
+  port              = 443
+  protocol          = "HTTPS"
+
+  # Specify the SSL certificate ARN here
+  ssl_policy      = "ELBSecurityPolicy-2016-08"
+  certificate_arn = data.aws_acm_certificate.cert.arn
 
   default_action {
     type             = "forward"
     target_group_arn = aws_lb_target_group.webapp_tg.arn
   }
 }
-
-# Output ALB DNS Name
-output "alb_dns_name" {
-  value = aws_lb.webapp_alb.dns_name
-}
+ 

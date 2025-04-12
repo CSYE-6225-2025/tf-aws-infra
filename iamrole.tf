@@ -1,6 +1,6 @@
 # Create IAM Role for EC2 with logging permissions
-resource "aws_iam_role" "ec2_cloudwatch_role" {
-  name        = "EC2-CloudWatch-Role-${var.vpc_name}"
+resource "aws_iam_role" "ec2_role" {
+  name        = "${var.vpc_name}-ec2_role"
   description = "IAM role for EC2 instance to access CloudWatch, S3, and application logging"
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
@@ -21,9 +21,9 @@ resource "aws_iam_role" "ec2_cloudwatch_role" {
 }
 
 # Add inline policy for S3 access
-resource "aws_iam_role_policy" "s3_bucket_access_policy" {
+resource "aws_iam_role_policy" "s3_access_policy" {
   name = "S3BucketAccessPolicy"
-  role = aws_iam_role.ec2_cloudwatch_role.id
+  role = aws_iam_role.ec2_role.id
 
   policy = jsonencode({
     Version = "2012-10-17"
@@ -48,7 +48,7 @@ resource "aws_iam_role_policy" "s3_bucket_access_policy" {
 # Add inline policy for CloudWatch Logs access
 resource "aws_iam_role_policy" "cloudwatch_logs_access_policy" {
   name = "CloudWatchLogsAccessPolicy"
-  role = aws_iam_role.ec2_cloudwatch_role.id
+  role = aws_iam_role.ec2_role.id
 
   policy = jsonencode({
     Version = "2012-10-17"
@@ -88,10 +88,45 @@ resource "aws_iam_role_policy" "cloudwatch_logs_access_policy" {
   })
 }
 
+# Policy for Secrets Manager full access
+resource "aws_iam_role_policy" "secrets_manager_access_policy" {
+  name = "SecretsManagerFullAccessPolicy"
+  role = aws_iam_role.ec2_role.id
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect   = "Allow"
+        Action   = "secretsmanager:*"
+        Resource = "*"
+      }
+    ]
+  })
+}
+
+# Policy for KMS full access
+resource "aws_iam_role_policy" "kms_access_policy" {
+  name = "KMSFullAccessPolicy"
+  role = aws_iam_role.ec2_role.id
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect   = "Allow"
+        Action   = "kms:*"
+        Resource = "*"
+      }
+    ]
+  })
+}
+
+
 # RDS Full Access Policy
 resource "aws_iam_role_policy" "rds_full_access_policy" {
   name = "RDSFullAccessPolicy"
-  role = aws_iam_role.ec2_cloudwatch_role.id
+  role = aws_iam_role.ec2_role.id
 
   policy = jsonencode({
     Version = "2012-10-17"
@@ -118,20 +153,20 @@ resource "aws_iam_role_policy" "rds_full_access_policy" {
 
 # Attach CloudWatch policy to the role
 resource "aws_iam_role_policy_attachment" "cloudwatch_agent_policy" {
-  role       = aws_iam_role.ec2_cloudwatch_role.name
+  role       = aws_iam_role.ec2_role.name
   policy_arn = "arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy"
 }
 
 # Create IAM Instance Profile
 resource "aws_iam_instance_profile" "ec2_profile" {
   name = "EC2-CloudWatch-Profile-${var.vpc_name}"
-  role = aws_iam_role.ec2_cloudwatch_role.name
+  role = aws_iam_role.ec2_role.name
 }
 
 # Route 53 Full Access Policy
 resource "aws_iam_role_policy" "route53_access_policy" {
   name = "Route53AccessPolicy"
-  role = aws_iam_role.ec2_cloudwatch_role.id
+  role = aws_iam_role.ec2_role.id
 
   policy = jsonencode({
     Version = "2012-10-17",
