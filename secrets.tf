@@ -1,6 +1,6 @@
 # Secrets Manager secret for RDS password
 resource "random_password" "db_password" {
-  length = 16
+  length  = 16
   special = false
 }
 resource "aws_secretsmanager_secret" "db_master_password_secret" {
@@ -16,6 +16,6 @@ resource "aws_secretsmanager_secret" "db_master_password_secret" {
 
 # Secret version
 resource "aws_secretsmanager_secret_version" "db_master_password_version" {
-  secret_id = aws_secretsmanager_secret.db_master_password_secret.id
-  secret_string = jsonencode ({ password = random_password.db_password.result })
+  secret_id     = aws_secretsmanager_secret.db_master_password_secret.id
+  secret_string = jsonencode({ password = random_password.db_password.result })
 }
